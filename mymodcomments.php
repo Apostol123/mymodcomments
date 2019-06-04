@@ -57,12 +57,44 @@ class mymodcomments extends Module
     // in this case in the display product tab
     public function install()
     {
-        parent::install();
+        //Call parent isntall_method
+        if(!parent::install())
+        return false;
+
+            //Execute the module install sql statemenets
         $sql_file=dirname(__FILE__)."/install/install.sql";
-        $this->loadSQLFile($sql_file);
-        $this->registerHook("displayProductTabContent");
+       if(! $this->loadSQLFile($sql_file))
+       return false;
+
+       if(! $this->registerHook("displayProductTabContent"))
+        return true;
+
+        Configuration::updateValue("MYMOD_GRADES","1");
+        Configuration::updateValue("MYMOD_COMMENTS","1");
+
+        //all went well
         return true;
     }
+
+    public function uninstall(){
+        //Call uninstall parent method
+        if(!parent::uninstall())
+        return false;
+
+        //exeute module install SQL statementes
+
+        $sql_file = dirname(__FILE__)."/install/uninstall.sql";
+        if(!$this->loadSQLFile($sql_file))
+        return false;
+
+        Configuration::deleteByName("MYMOD_GRADES");
+        Configuration::deleteByName("MYMO_COMMENTS");
+
+        //all went well
+        return true;
+
+    }
+
 
     // dispalys the html into the hook
     public function hookDisplayProductTabContent($params)
