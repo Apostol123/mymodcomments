@@ -5,16 +5,18 @@ class mymodcomments extends Module
     public function __construct()
     {
         $this->name = "mymodcomments";
-        $this->displayName = "My Module of product comments";
+       
 
         $this->tab = "fron_office_features";
         $this->version = "0.1";
         $this->author = "Alex Apostol";
-        $this->description = "With this module, your customers will be able
-        to grade and comments your products";
+        
 
         $this->bootstrap = true;
         parent::__construct();
+        $this->displayName = $this->l("My Module of product comments");
+        $this->description = $this->l("With this module, your customers will be able
+        to grade and comments your products");
     }
 
 
@@ -41,6 +43,7 @@ class mymodcomments extends Module
 
     public function assignConfiguration()
     {
+        
         $enable_grades = Configuration::get('MYMOD_GRADES');
         $enable_comments = Configuration::get('MYMOD_COMMENTS');
         $this->context->smarty->assign('enable_grades', $enable_grades);
@@ -84,11 +87,14 @@ class mymodcomments extends Module
             );
 
             Db::getInstance()->insert("mymod_comment", $insert);
+            $this->context->smarty->assign("new_comment_posted","true");
         }
     }
 
     public function assignProductTabContent()
     {
+        $this->context->controller->addCSS($this->_path."views/css/mymodcomments.css");
+        $this->context->controller->addJS($this->_path."views/js/mymodcomments.js");
         $enable_grades = Configuration::get('MYMOD_GRADES');
         $enable_comments = Configuration::get('MYMOD_COMMENTS');
         $id_product = Tools::getValue('id_product');

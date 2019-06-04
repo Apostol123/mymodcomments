@@ -1,4 +1,6 @@
-<h3 class="page-product-heading">Product Comments</h3>
+<h3 class="page-product-heading" id="mymodcomments-content-tab"{if
+isset($new_comment_posted)} data-scroll="true"{/if}>{l
+s='Product Comments' mod='mymodcomments'}</h3>
 <div class="rte">
 {foreach from=$comments item=comment}
 <p>
@@ -7,7 +9,7 @@
 <strong>Grade:</strong> {$comment.grade}/5<br>
 </p><br>
 {/foreach}
-
+{if $enable_grades eq 1 OR $enable_comments eq 1}
 <form action="" method="POST" id="comment-form">
 {if $enable_grades eq 1}
 <div class="form-group">
@@ -41,4 +43,5 @@ class="button btn btn-default button-medium">
 </div>
 </form>
 </div>
+{/if}
 {/if}
