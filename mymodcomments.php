@@ -58,6 +58,8 @@ class mymodcomments extends Module
     public function install()
     {
         parent::install();
+        $sql_file=dirname(__FILE__)."/install/install.sql";
+        $this->loadSQLFile($sql_file);
         $this->registerHook("displayProductTabContent");
         return true;
     }
@@ -89,6 +91,19 @@ class mymodcomments extends Module
             Db::getInstance()->insert("mymod_comment", $insert);
             $this->context->smarty->assign("new_comment_posted","true");
         }
+    }
+
+
+    public function loadSQLFile($sql_file){
+
+        $sql_content = file_get_contents($sql_file);
+        $sql_content=str_replace("PREFIX_",_DB_PREFIX_,$sql_content);
+        $sql_requests= preg_split("/;\s*[\r\n]+/",$sql_content);
+        $result = true;
+        foreach($sql_requests as $request)
+        if (!empty($request))
+        $result &= Db::getInstance()->execute(trim($request));
+        return $result;
     }
 
     public function assignProductTabContent()
